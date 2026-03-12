@@ -1,4 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, session
+from werkzeug.utils import secure_filename
+import os
 from .models import Animal, User
 from .extensions import db
 
@@ -25,12 +27,17 @@ def home():
 def add():
 
     if request.method == "POST":
+        image = request.files["image"]
+        filename = secure_filename(image.filename)
+        image.save(os.path.join("static/uploads", filename))
+
 
         animal = Animal(
             name=request.form["name"],
             species=request.form["species"],
             habitat=request.form["habitat"],
-            legs=request.form["legs"]
+            legs=request.form["legs"],
+            image=filename
         )
 
         db.session.add(animal)
@@ -49,6 +56,7 @@ def edit(id):
         animal.species = request.form["species"]
         animal.habitat = request.form["habitat"]
         animal.legs = request.form["legs"]
+        animal.image = request.form["image_url"]
 
         db.session.commit()
 

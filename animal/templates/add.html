@@ -19,7 +19,7 @@
 
 <div class="card p-4 shadow">
 
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
 
 <div class="mb-3">
 <label class="form-label">Name</label>
@@ -53,6 +53,11 @@
 <option value="4">4</option>
 
 </select>
+</div>
+
+<div class="mb-3">
+<label class="form-label">Animal Image</label>
+<input type="file" name="image" class="form-control" required>
 </div>
 
 <button type="submit" class="btn btn-success">Save</button>

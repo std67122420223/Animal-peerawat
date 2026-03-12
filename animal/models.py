@@ -2,10 +2,11 @@ from .extensions import db
 
 class Animal(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
-    species = db.Column(db.String(50))
-    habitat = db.Column(db.String(50))
+    name = db.Column(db.String(100))
+    species = db.Column(db.String(100))
+    habitat = db.Column(db.String(100))
     legs = db.Column(db.Integer)
+    image = db.Column(db.String(200)) 
 
 
 class User(db.Model):
