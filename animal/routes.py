@@ -27,17 +27,12 @@ def home():
 def add():
 
     if request.method == "POST":
-        image = request.files["image"]
-        filename = secure_filename(image.filename)
-        image.save(os.path.join("static/uploads", filename))
-
-
         animal = Animal(
             name=request.form["name"],
             species=request.form["species"],
             habitat=request.form["habitat"],
             legs=request.form["legs"],
-            image=filename
+            image=request.form["image_url"]
         )
 
         db.session.add(animal)
@@ -65,6 +60,7 @@ def edit(id):
     return render_template("edit.html", animal=animal)
 @main_bp.route("/register", methods=["GET","POST"])
 def register():
+    error = None
 
     if request.method == "POST":
 
@@ -74,18 +70,19 @@ def register():
         confirm_password = request.form["confirm_password"]
 
         if password != confirm_password:
-         return "Password not match"
+         error = "Passwords do not match"
+        else:
+         user = User(username=username, email=email, password=password)
 
-        user = User(username=username, email=email, password=password)
+         db.session.add(user)
+         db.session.commit()
 
-        db.session.add(user)
-        db.session.commit()
+         return redirect("/login")
 
-        return redirect("/login")
-
-    return render_template("register.html")
+    return render_template("register.html", error=error)
 @main_bp.route("/login", methods=["GET","POST"])
 def login():
+    error = None 
 
     if request.method == "POST":
 
@@ -98,12 +95,49 @@ def login():
             session["user"] = user.username
             return redirect("/")
         else:
-            return "Login Failed"
+            error = "Username or Password incorrect"
 
-    return render_template("login.html")
+    return render_template("login.html", error=error)
 @main_bp.route("/logout")
 def logout():
 
     session.pop("user", None)
 
     return redirect("/login")
+@main_bp.route("/change_password", methods=["GET","POST"])
+def change_password():
+
+    error = None
+
+    if "user" not in session:
+        return redirect("/login")
+
+    if request.method == "POST":
+
+        current_password = request.form["current_password"]
+        new_password = request.form["new_password"]
+        confirm_password = request.form["confirm_password"]
+
+        user = User.query.filter_by(username=session["user"]).first()
+
+        if user.password != current_password:
+            error = "Current password incorrect"
+
+        elif new_password != confirm_password:
+            error = "New passwords do not match"
+
+        else:
+            user.password = new_password
+            db.session.commit()
+            return redirect("/")
+
+    return render_template("change_password.html", error=error)
+@main_bp.route("/delete/<int:id>")
+def delete(id):
+
+    animal = Animal.query.get_or_404(id)
+
+    db.session.delete(animal)
+    db.session.commit()
+
+    return redirect("/")

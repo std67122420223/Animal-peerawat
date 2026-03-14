@@ -35,6 +35,13 @@ Please login to access the animal management system
 
 <div class="mb-3">
 <input type="password" name="password" class="form-control form-control-lg" placeholder="Password" autocomplete="new-password">
+
+{% if error %}
+<div class="text-danger mt-2">
+    {{ error }}
+</div>
+{% endif %}
+
 </div>
 
 <button class="btn btn-primary btn-lg w-100">Login</button>
