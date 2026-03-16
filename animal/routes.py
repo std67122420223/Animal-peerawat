@@ -8,17 +8,20 @@ main_bp = Blueprint("main", __name__)
 
 @main_bp.route("/")
 def home():
-    if "user" not in session:
+    if "user_id" not in session:
         return redirect("/login")
 
     search = request.args.get("search")
 
     if search:
         animals = Animal.query.filter(
+            Animal.user_id == session["user_id"],
             Animal.name.ilike(f"%{search}%")
         ).all()
     else:
-        animals = Animal.query.order_by(Animal.id).all()
+        animals = Animal.query.filter_by(
+         user_id=session["user_id"]
+        ).order_by(Animal.id).all()
 
     return render_template("animals.html", animals=animals)
 
@@ -32,7 +35,9 @@ def add():
             species=request.form["species"],
             habitat=request.form["habitat"],
             legs=request.form["legs"],
-            image=request.form["image_url"]
+            image=request.form["image_url"],
+            user_id=session["user_id"]
+
         )
 
         db.session.add(animal)
@@ -92,7 +97,7 @@ def login():
         user = User.query.filter_by(username=username, password=password).first()
 
         if user:
-            session["user"] = user.username
+            session["user_id"] = user.id
             return redirect("/")
         else:
             error = "Username or Password incorrect"
@@ -109,7 +114,7 @@ def change_password():
 
     error = None
 
-    if "user" not in session:
+    if "user_id" not in session:
         return redirect("/login")
 
     if request.method == "POST":
@@ -118,7 +123,7 @@ def change_password():
         new_password = request.form["new_password"]
         confirm_password = request.form["confirm_password"]
 
-        user = User.query.filter_by(username=session["user"]).first()
+        user = User.query.get(session["user_id"])
 
         if user.password != current_password:
             error = "Current password incorrect"

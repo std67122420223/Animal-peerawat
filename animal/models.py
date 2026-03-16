@@ -8,6 +8,8 @@ class Animal(db.Model):
     legs = db.Column(db.Integer)
     image = db.Column(db.String(200)) 
 
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
 
 class User(db.Model):
 
