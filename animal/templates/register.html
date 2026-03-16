@@ -10,17 +10,25 @@
 
 </head>
 
-<body class="bg-light">
+<body style="background-color:#e5e5e5;">
 
 <div class="container">
 
-<div class="row justify-content-center mt-5">
+<div class="row justify-content-center align-items-center vh-100">
 
-<div class="col-md-4">
+<div class="col-md-6">
 
-<div class="card shadow">
-
-<div class="card-body">
+<div class="card shadow-lg border-0 rounded-4 text-white bg-animal">
+<style>
+.bg-animal{
+background-image:url("{{ url_for('static', filename='animal.jpg') }}");
+background-size:cover;
+background-position:center;
+min-height:500px;
+}
+</style>
+<div class="card-body p-5 text-center"
+style="background: rgba(0,0,0,0.5); border-radius:20px;">
 
 <h3 class="text-center">🐾 Animal Database</h3>
 <p class="text-center text-muted mb-4">Create account</p>
