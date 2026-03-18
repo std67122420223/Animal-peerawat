@@ -27,8 +27,6 @@ def home():
 @main_bp.route("/animals")
 def animals():
     return redirect("/")
-
-
 @main_bp.route("/add", methods=["GET","POST"])
 def add():
 
