@@ -58,33 +58,24 @@ def edit(id):
         animal.habitat = request.form["habitat"]
         animal.legs = request.form["legs"]
         animal.image = request.form["image_url"]
-
         db.session.commit()
-
         return redirect("/")
-
     return render_template("edit.html", animal=animal)
 @main_bp.route("/register", methods=["GET","POST"])
 def register():
     error = None
-
     if request.method == "POST":
-
         username = request.form["username"]
         email = request.form["email"]
         password = request.form["password"]
         confirm_password = request.form["confirm_password"]
-
         if password != confirm_password:
          error = "Passwords do not match"
         else:
          user = User(username=username, email=email, password=password)
-
          db.session.add(user)
          db.session.commit()
-
          return redirect("/login")
-
     return render_template("register.html", error=error)
 @main_bp.route("/login", methods=["GET","POST"])
 def login():
