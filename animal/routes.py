@@ -24,6 +24,9 @@ def home():
         ).order_by(Animal.id).all()
 
     return render_template("animals.html", animals=animals)
+@main_bp.route("/animals")
+def animals():
+    return redirect("/")
 
 
 @main_bp.route("/add", methods=["GET","POST"])

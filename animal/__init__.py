@@ -8,6 +8,11 @@ def create_app():
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
     app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 
+ 
+    app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
+        "connect_args": {"sslmode": "require"}
+    }
+
     db.init_app(app)
 
     from .routes import main_bp
