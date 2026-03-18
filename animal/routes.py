@@ -80,12 +80,9 @@ def register():
 @main_bp.route("/login", methods=["GET","POST"])
 def login():
     error = None 
-
     if request.method == "POST":
-
         username = request.form["username"]
         password = request.form["password"]
-
         user = User.query.filter_by(username=username, password=password).first()
 
         if user:
